@@ -1,26 +1,40 @@
 import { useState } from "react";
+import type { Npc } from "../types/NPC";
 
-type AddNpcFormProps = {
-  onSubmit: (npc: {
-    name: string;
-    role: string;
-    location: string;
-    personality: string;
-    motivation: string;
-    secret: string;
-  }) => void;
-  onCancel: () => void;
+type NpcFormValues = {
+  name: string;
+  role: string;
+  location: string;
+  personality: string;
+  motivation: string;
+  secret: string;
 };
 
-export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    role: "",
-    location: "",
-    personality: "",
-    motivation: "",
-    secret: "",
-  });
+type Props = {
+  initialValues?: NpcFormValues;
+  onSubmit: (values: NpcFormValues) => Promise<void> | void;
+  onCancel: () => void;
+  submitLabel: string;
+};
+
+export default function NpcForm({
+  initialValues,
+  onSubmit,
+  onCancel,
+  submitLabel,
+}: Props) {
+  const [formData, setFormData] = useState<NpcFormValues>(
+    initialValues ?? {
+      name: "",
+      role: "",
+      location: "",
+      personality: "",
+      motivation: "",
+      secret: "",
+    }
+  );
+
+  const [submitting, setSubmitting] = useState(false);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -29,9 +43,14 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onSubmit(formData);
+    setSubmitting(true);
+    try {
+      await onSubmit(formData);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -39,7 +58,7 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
       onSubmit={handleSubmit}
       className="rounded-2xl border border-white/10 bg-white/5 p-6"
     >
-      <h3 className="mb-5 text-2xl font-semibold text-white">Add NPC</h3>
+      <h3 className="mb-5 text-2xl font-semibold text-white">{submitLabel}</h3>
 
       <div className="grid gap-4 md:grid-cols-2">
         <input
@@ -47,16 +66,16 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
           value={formData.name}
           onChange={handleChange}
           placeholder="Name"
-          className="rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
           required
+          className="rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
         />
         <input
           name="role"
           value={formData.role}
           onChange={handleChange}
           placeholder="Role"
-          className="rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
           required
+          className="rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
         />
         <input
           name="location"
@@ -64,7 +83,6 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
           onChange={handleChange}
           placeholder="Location"
           className="rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
-          required
         />
         <input
           name="personality"
@@ -72,7 +90,6 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
           onChange={handleChange}
           placeholder="Personality"
           className="rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
-          required
         />
       </div>
 
@@ -84,7 +101,6 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
           placeholder="Motivation"
           rows={3}
           className="w-full rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 outline-none"
-          required
         />
         <textarea
           name="secret"
@@ -99,9 +115,10 @@ export default function AddNpcForm({ onSubmit, onCancel }: AddNpcFormProps) {
       <div className="mt-6 flex gap-3">
         <button
           type="submit"
-          className="rounded-xl bg-violet-600 px-5 py-3 font-medium text-white hover:bg-violet-500"
+          disabled={submitting}
+          className="rounded-xl bg-violet-600 px-5 py-3 font-medium text-white hover:bg-violet-500 disabled:opacity-60"
         >
-          Save NPC
+          {submitting ? "Saving..." : submitLabel}
         </button>
         <button
           type="button"

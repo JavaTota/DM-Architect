@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+
+import npcRoutes from "./routes/npcRoutes.js";
 import campaignRoutes from "./routes/campaignRoutes.js";
 
 dotenv.config();
@@ -13,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/campaigns", campaignRoutes);
+app.use("/api/npcs", npcRoutes);
 
 const PORT = process.env.PORT || 3001;
 
