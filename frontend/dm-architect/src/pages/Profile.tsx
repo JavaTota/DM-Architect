@@ -1,6 +1,8 @@
-import React from 'react'
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+    const navigate = useNavigate();
+
     return (
     <main className="min-h-screen bg-slate-900 text-white">
       <div className="mx-auto max-w-5xl px-6 py-10">
@@ -90,7 +92,9 @@ const Profile = () => {
           </div>
 
           <div className="mt-6 flex justify-end">
-            <button className="rounded-xl bg-violet-600 px-6 py-3 font-medium hover:bg-violet-500">
+            <button 
+              onClick={() => navigate(-1)}
+              className="rounded-xl bg-violet-600 px-6 py-3 font-medium hover:bg-violet-500">
               Save Changes
             </button>
           </div>

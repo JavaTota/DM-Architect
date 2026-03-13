@@ -1,13 +1,18 @@
+import { useNavigate, useParams } from "react-router-dom";
+
 export function Sidebar() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
   const items = [
-    "Overview",
-    "NPCs",
-    "Quests",
-    "Sessions",
-    "Locations",
-    "Notes",
-    "Timeline",
-    "AI Assistant",
+    { label: "Overview", path: "overview" },
+    { label: "NPCs", path: "npcs" },
+    { label: "Quests", path: "quests" },
+    { label: "Sessions", path: "sessions" },
+    { label: "Locations", path: "locations" },
+    { label: "Notes", path: "notes" },
+    { label: "Timeline", path: "timeline" },
+    { label: "AI Assistant", path: "ai" },
   ];
 
   return (
@@ -15,14 +20,15 @@ export function Sidebar() {
       <nav className="space-y-2">
         {items.map((item, index) => (
           <button
-            key={item}
+            key={item.label}
+            onClick={() => navigate(`/campaign/${id}/${item.path}`)}
             className={`flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
               index === 0
                 ? "bg-indigo-500/30 text-white"
                 : "text-white/80 hover:bg-white/5 hover:text-white"
             }`}
           >
-            {item}
+            {item.label}
           </button>
         ))}
       </nav>
@@ -32,6 +38,7 @@ export function Sidebar() {
           <button className="flex w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 hover:bg-white/5 hover:text-white">
             Settings
           </button>
+
           <button className="flex w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 hover:bg-white/5 hover:text-white">
             Logout
           </button>

@@ -7,8 +7,8 @@ import Profile from "./pages/Profile";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard/>} />
-      <Route path="/campaign/:id" element={<CampaignWorkspace />} />
+      <Route path="/" element={<Dashboard />} />
+      <Route path="/campaign/:id/*" element={<CampaignWorkspace />} />
       <Route path="/create" element={<CreateCampaign />} />
       <Route path="/profile" element={<Profile />} />
     </Routes>
