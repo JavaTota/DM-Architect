@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import type { Campaign } from "../types/Campaign";
+import { Sidebar } from "../components/Sidebar";
+import AiToolsPanel from "../components/AiToolsPanel";
+import Topbar from "../components/Topbar";
 
 type CampaignDetails = Campaign & {
   tone?: string;
@@ -85,67 +88,12 @@ export default function CampaignWorkspace() {
 
   return (
     <div className="min-h-screen bg-[#0b1225] text-white">
-      <div className="mx-auto flex min-h-screen max-w-400 flex-col p-6">
+      <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col p-6">
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-[#101935] shadow-2xl shadow-black/30">
-          <header className="flex h-20 items-center justify-between border-b border-white/10 bg-white/5 px-6">
-            <div className="flex items-center gap-4">
-              <div className="h-11 w-11 rounded-xl bg-linear-to-br from-violet-500 to-indigo-700" />
-              <div className="flex items-center gap-6">
-                <h1 className="text-2xl font-bold">{campaign.name}</h1>
-                <span className="hidden text-lg text-white/70 md:block">
-                  Campaign Workspace
-                </span>
-              </div>
-            </div>
+          <Topbar campaign={campaign} />
 
-            <div className="flex items-center gap-3">
-              <button className="rounded-xl border border-white/10 bg-white/10 px-5 py-2.5 text-sm font-semibold hover:bg-white/15">
-                Save
-              </button>
-              <button className="rounded-xl border border-white/10 bg-white/10 px-5 py-2.5 text-sm font-semibold hover:bg-white/15">
-                Export Campaign
-              </button>
-              <div className="h-11 w-11 rounded-full bg-white/20" />
-            </div>
-          </header>
-
-          <div className="grid min-h-[calc(100vh-8rem)] grid-cols-12">
-            <aside className="col-span-2 border-r border-white/10 bg-[#0f1730] p-4">
-              <nav className="space-y-2">
-                {[
-                  "Overview",
-                  "NPCs",
-                  "Quests",
-                  "Sessions",
-                  "Locations",
-                  "Notes",
-                  "Timeline",
-                  "AI Assistant",
-                ].map((item, index) => (
-                  <button
-                    key={item}
-                    className={`flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
-                      index === 0
-                        ? "bg-indigo-500/30 text-white"
-                        : "text-white/80 hover:bg-white/5 hover:text-white"
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </nav>
-
-              <div className="mt-8 border-t border-white/10 pt-6">
-                <div className="space-y-2">
-                  <button className="flex w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 hover:bg-white/5 hover:text-white">
-                    Settings
-                  </button>
-                  <button className="flex w-full rounded-xl px-4 py-3 text-left text-sm text-white/70 hover:bg-white/5 hover:text-white">
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </aside>
+          <div className="grid min-h-[calc(100vh-5rem)] grid-cols-12">
+            <Sidebar />
 
             <main className="col-span-7 bg-[#111a36] p-5">
               <div className="space-y-5">
@@ -156,6 +104,7 @@ export default function CampaignWorkspace() {
                       <span className="font-semibold">Campaign Summary:</span>{" "}
                       {campaign.summary || campaign.idea || "No summary yet."}
                     </p>
+
                     <div className="space-y-2 text-white/80">
                       <p>
                         <span className="font-semibold text-white">Theme:</span>{" "}
@@ -180,11 +129,12 @@ export default function CampaignWorkspace() {
                     <h3 className="mb-4 text-2xl font-semibold">Main Villain</h3>
                     <div className="rounded-2xl border border-white/10 bg-[#1a2446] p-4">
                       <div className="mb-4 flex gap-4">
-                        <div className="h-28 w-24 rounded-xl bg-linear-to-b from-slate-700 to-slate-900" />
+                        <div className="h-28 w-24 rounded-xl bg-gradient-to-b from-slate-700 to-slate-900" />
                         <div>
                           <h4 className="text-2xl font-bold">
                             {campaign.villain?.name || "No villain yet"}
                           </h4>
+
                           <div className="mt-3 space-y-2 text-sm text-white/80">
                             <p>
                               <span className="font-semibold text-white">
@@ -207,6 +157,7 @@ export default function CampaignWorkspace() {
                           </div>
                         </div>
                       </div>
+
                       <button className="w-full rounded-xl bg-white/10 py-3 text-sm font-medium hover:bg-white/15">
                         Expand Villain Details
                       </button>
@@ -221,10 +172,12 @@ export default function CampaignWorkspace() {
                       <h4 className="text-3xl font-bold">
                         {campaign.startingLocation?.name || "No location yet"}
                       </h4>
+
                       <p className="mt-4 text-white/80">
                         {campaign.startingLocation?.description ||
                           "No location description yet."}
                       </p>
+
                       <div className="mt-5 space-y-3 text-white/80">
                         <p>
                           <span className="font-semibold text-white">
@@ -234,6 +187,7 @@ export default function CampaignWorkspace() {
                             ? campaign.startingLocation.importantNPCs.join(", ")
                             : "None yet"}
                         </p>
+
                         <p>
                           <span className="font-semibold text-white">
                             Notable Landmarks:
@@ -279,53 +233,7 @@ export default function CampaignWorkspace() {
               </div>
             </main>
 
-            <aside className="col-span-3 border-l border-white/10 bg-[#0f1730] p-5">
-              <div className="space-y-5">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                  <h3 className="mb-4 text-2xl font-semibold">AI Tools</h3>
-                  <div className="space-y-3">
-                    {[
-                      "Generate NPC",
-                      "Generate Quest",
-                      "Generate Session",
-                      "Generate Location",
-                      "Generate Plot Twist",
-                    ].map((item, index) => (
-                      <button
-                        key={item}
-                        className={`w-full rounded-xl px-4 py-3 text-left font-medium ${
-                          index === 0
-                            ? "bg-indigo-500 text-white hover:bg-indigo-400"
-                            : "bg-white/10 text-white hover:bg-white/15"
-                        }`}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                  <input
-                    type="text"
-                    placeholder="Ask AI about your campaign..."
-                    className="w-full rounded-xl border border-white/10 bg-[#1a2446] px-4 py-3 text-white placeholder:text-white/40 focus:outline-none"
-                  />
-
-                  <div className="mt-4 space-y-3 text-sm text-white/75">
-                    <button className="block hover:text-white">
-                      Generate tavern rumors
-                    </button>
-                    <button className="block hover:text-white">
-                      Create a rival adventuring party
-                    </button>
-                    <button className="block hover:text-white">
-                      Expand the villain&apos;s plans
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </aside>
+            <AiToolsPanel />
           </div>
         </div>
       </div>
